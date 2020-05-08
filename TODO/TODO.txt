@@ -1,0 +1,25 @@
+Tests:
+1. Replication function calls
+2. Property update
+3. Actor flags for replication
+
+Engine subsystems replication:
+1. Physics
+2. Movement
+3. Animation
+4. AI, Pathfinding
+5. Rendering
+
+Tests by object type:
+1. Actor
+2. UI
+3. Pawn 
+4. Controller
+5. Component
+6. Assets:
+6.1. Material
+6.2. Particle system
+
+Helpers:
+1. Logging:
+1.1. 
