@@ -1,6 +1,8 @@
 #pragma once
 
 #include "GameFramework/PlayerController.h"
+#include "RepActorTypes.h"
+#include "TimerManager.h"
 #include "PC.generated.h"
 
 class AMyPawn;
@@ -48,6 +50,19 @@ public:
 	AMyPawn* CastToMyPawn(APawn* InPawn) const;
 	const AMyPawn* CastToMyPawn(const APawn* InPawn) const;
 	// ~Pawn End
+
+	// ~Test Timer Begin
+	void SetTestTimer(EMyFrameworkPoint InCallingPoint);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timer|Demo|Net")
+	FRepTimerTest TimerTestProps;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Timer|Demo|Net")
+	void DoOnTimerTestIfNecessary();
+	virtual void DoOnTimerTestIfNecessary_Implementation();
+
+	FTimerHandle TestTimerHandle;
+	// ~Test Timer End
 	
 protected:
 	// ~Logging Begin
@@ -69,6 +84,7 @@ protected:
 	void ThisLogWarn(const TCHAR* Sender, const TCHAR* Format, const TArray<FStringFormatArg>& Args);
 	// ~Logging End
 
+	// ~Debug actions Begin
 	UFUNCTION(BlueprintNativeEvent, Category = InputEvents)
 	void DebugOne();
 	virtual void DebugOne_Implementation();
@@ -80,6 +96,7 @@ protected:
 	UFUNCTION(BlueprintNativeEvent, Category = InputEvents)
 	void DebugThree();
 	virtual void DebugThree_Implementation();
+	// ~Debug actions End
 
 private:
 	bool bBeginPlayCalled = false;

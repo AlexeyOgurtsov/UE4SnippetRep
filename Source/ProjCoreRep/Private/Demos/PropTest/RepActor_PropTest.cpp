@@ -87,11 +87,17 @@ void ARepActor_PropTest::PrintMe_Implementation()
 	}
 
 	{
+		ULogUtilLib::K2LogStringArray(RepStrArray);
+		ULogUtilLib::K2LogStringSet(RepStrSet);
+		// @TODO
+		//ULogUtilLib::LogMap(RepStrIntMap, StringDeref, IntToStringDeref);
+	}
+
+	{
 		RepTestStruct.Print(this);
 		TestStruct.Print(this);
 	}
 
-	// @TODO: Log array, string, set here	
 	// @TODO: Log new objects etc.
 }
 

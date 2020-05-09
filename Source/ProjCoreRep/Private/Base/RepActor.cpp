@@ -24,6 +24,7 @@ ARepActor::ARepActor()
 
 void ARepActor::PrintMe_Implementation()
 {
+	UNetUtils::LogNetVars(this);
 	ThisLog(TEXT(__FUNCTION__), TEXT(""), {});
 }
 
@@ -41,7 +42,9 @@ void ARepActor::BeginPlay()
 {
 	M_LOGFUNC();
 	Super::BeginPlay();
+
 	ThisLog(TEXT(__FUNCTION__), TEXT(""), {});
+	UNetUtils::LogNetVars(this);
 
 	SetupTestTimerIfNecessary(EMyFrameworkPoint::AtBeginPlay, GetTestProps().TimerTest);
 	DoBeginPlayTestIfNecessary();
@@ -49,22 +52,7 @@ void ARepActor::BeginPlay()
 
 void ARepActor::SetupTestTimerIfNecessary(EMyFrameworkPoint const InCallingPoint, const FRepTimerTest& InTestProps)
 {
-	if(ShouldDoRepTest(InTestProps.Test))
-	{
-		if(InCallingPoint == InTestProps.SetTimerPoint)
-		{
-			ThisLog
-			(
-			 	TEXT(__FUNCTION__),
-			 	TEXT("Setting up timer; TimerInterval = {0}; bPeriodic=\"{1}\""), 
-				TArray<FStringFormatArg> { 
-					InTestProps.TimerInterval, 
-					(InTestProps.bPeriodic ? TEXT("YES") : TEXT("no")) 
-				} 
-			);
-			GetWorldTimerManager().SetTimer(TestTimerHandle, this, &ARepActor::DoOnTimerTestIfNecessary, InTestProps.TimerInterval, InTestProps.bPeriodic);
-		}
-	}
+	UDemoUtilLib::SetupTestTimerIfNecessary(this, TestTimerHandle, InCallingPoint, InTestProps, FTimerDelegate::CreateUObject(this, &ARepActor::DoOnTimerTestIfNecessary) );	
 }
 
 void ARepActor::DoOnTimerTestIfNecessary()

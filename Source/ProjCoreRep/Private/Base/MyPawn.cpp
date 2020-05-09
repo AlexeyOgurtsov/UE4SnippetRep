@@ -20,6 +20,8 @@ void AMyPawn::BeginPlay()
 	M_LOGFUNC();
 	Super::BeginPlay();
 
+	UNetUtils::LogNetVars(this);
+
 	bBeginPlayCalled = true;
 	if(APC* PC = GetPC())
 	{
@@ -93,16 +95,16 @@ void AMyPawn::ThisLogWarnStrings(const TCHAR* Sender, const TCHAR* Format, const
 
 void AMyPawn::ThisLog(const TCHAR* Sender, const TCHAR* Format, const TArray<FStringFormatArg>& Args)
 {	
-	UNetUtils::NetLog(this, Format, Args, UDemoUtilLib::GetDefaultLogFlags());
+	UNetUtils::NetPrefixedLog(this, Sender, Format, Args, UDemoUtilLib::GetDefaultLogFlags());
 }
 
 void AMyPawn::ThisLogError(const TCHAR* Sender, const TCHAR* Format, const TArray<FStringFormatArg>& Args)
 {
-	UNetUtils::NetLogError(this, Format, Args, UDemoUtilLib::GetDefaultLogFlags());
+	UNetUtils::NetPrefixedLogError(this, Sender, Format, Args, UDemoUtilLib::GetDefaultLogFlags());
 }
 
 void AMyPawn::ThisLogWarn(const TCHAR* Sender, const TCHAR* Format, const TArray<FStringFormatArg>& Args)
 {
-	UNetUtils::NetLogWarn(this, Format, Args, UDemoUtilLib::GetDefaultLogFlags());
+	UNetUtils::NetPrefixedLogWarn(this, Sender, Format, Args, UDemoUtilLib::GetDefaultLogFlags());
 }
 // ~Logging End

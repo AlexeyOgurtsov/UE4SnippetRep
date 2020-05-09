@@ -1,6 +1,7 @@
 #include "DemoUtilLib.h"
 #include "GameFramework/Actor.h"
 #include "Algo/Transform.h"
+#include "TimerManager.h"
 #include "Util/Core/LogUtilLib.h"
 
 bool UDemoUtilLib::ShouldDoRepTest(const AActor* const TestOwner, const FRepActorTest& InTest)
@@ -26,6 +27,36 @@ bool UDemoUtilLib::ShouldDoRepTestByFlags(const AActor* TestOwner, ERepTestFlags
 		return (InFlags & ERepTestFlags::DoOnClient) != ERepTestFlags::None;
 	}
 }
+
+void UDemoUtilLib::SetupTestTimerIfNecessary
+(
+	AActor* TestOwner,
+	FTimerHandle& OutTimerHandle,
+	EMyFrameworkPoint const InCallingPoint, 
+	const FRepTimerTest& InTestProps,
+	const FTimerDelegate& InTimerDelegate
+)
+{
+	checkf(TestOwner, TEXT("Test owner should never be nullptr when calling \"%s\""), TEXT(__FUNCTION__));
+	if (ShouldDoRepTest(TestOwner, InTestProps.Test))
+	{		
+		if (InCallingPoint == InTestProps.SetTimerPoint)
+		{
+			UNetUtils::NetPrefixedLog
+			(
+				TestOwner,
+				TEXT(__FUNCTION__),
+				TEXT("Setting up timer; TimerInterval = {0}; bPeriodic=\"{1}\""),
+				TArray<FStringFormatArg> {
+					InTestProps.TimerInterval,
+					(InTestProps.bPeriodic ? TEXT("YES") : TEXT("no"))
+				}
+			);
+			TestOwner->GetWorldTimerManager().SetTimer(OutTimerHandle, InTimerDelegate, InTestProps.TimerInterval, InTestProps.bPeriodic);
+		}
+	}
+}
+
 
 ERepTestEnum UDemoUtilLib::GetUpdatedEnum(AActor* Sender)
 {

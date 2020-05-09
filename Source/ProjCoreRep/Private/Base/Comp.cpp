@@ -3,9 +3,9 @@
 #include "Util\Net\NetUtils.h"
 #include "DemoUtils\DemoUtilLib.h"
 
-
 UComp::UComp()
 {
+	UNetUtils::LogComponentNetVars(this);
 }
 
 void UComp::BeginPlay()

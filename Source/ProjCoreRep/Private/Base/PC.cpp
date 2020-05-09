@@ -21,8 +21,12 @@ void APC::PostInitProperties()
 void APC::BeginPlay()
 {
 	M_LOGFUNC();
-	Super::BeginPlay();
+	Super::BeginPlay();	
+
 	ThisLog(TEXT(__FUNCTION__), TEXT(""), {});
+	UNetUtils::LogNetVars(this);
+
+	SetTestTimer(EMyFrameworkPoint::AtBeginPlay);
 
 	bBeginPlayCalled = true;
 }
@@ -100,19 +104,29 @@ const AMyPawn* APC::CastToMyPawn(const APawn* const InPawn) const
 // ~Debug input actions Begin
 void APC::DebugOne_Implementation()
 {
-	M_LOGFUNC();
+	ThisLog(TEXT(__FUNCTION__), TEXT(""), {});
 }
 
 void APC::DebugTwo_Implementation()
 {
-	M_LOGFUNC();
+	ThisLog(TEXT(__FUNCTION__), TEXT(""), {});
 }
 
 void APC::DebugThree_Implementation()
 {
-	M_LOGFUNC();
+	ThisLog(TEXT(__FUNCTION__), TEXT(""), {});
 }
 // ~Debug input actions End
+
+void APC::SetTestTimer(const EMyFrameworkPoint InCallingPoint)
+{
+	UDemoUtilLib::SetupTestTimerIfNecessary(this, TestTimerHandle, InCallingPoint, TimerTestProps, FTimerDelegate::CreateUObject(this, &APC::DoOnTimerTestIfNecessary));
+}
+
+void APC::DoOnTimerTestIfNecessary_Implementation()
+{
+	// Nothing is to be done here
+}
 
 // ~Logging Begin
 void APC::K2_ThisLog(const FString& Sender, const FString& Format, const TArray<FString>& Args)
@@ -150,16 +164,16 @@ void APC::ThisLogWarnStrings(const TCHAR* Sender, const TCHAR* Format, const TAr
 
 void APC::ThisLog(const TCHAR* Sender, const TCHAR* Format, const TArray<FStringFormatArg>& Args)
 {	
-	UNetUtils::NetLog(this, Format, Args, UDemoUtilLib::GetDefaultLogFlags());
+	UNetUtils::NetPrefixedLog(this, Sender, Format, Args, UDemoUtilLib::GetDefaultLogFlags());
 }
 
 void APC::ThisLogError(const TCHAR* Sender, const TCHAR* Format, const TArray<FStringFormatArg>& Args)
 {
-	UNetUtils::NetLogError(this, Format, Args, UDemoUtilLib::GetDefaultLogFlags());
+	UNetUtils::NetPrefixedLogError(this, Sender, Format, Args, UDemoUtilLib::GetDefaultLogFlags());
 }
 
 void APC::ThisLogWarn(const TCHAR* Sender, const TCHAR* Format, const TArray<FStringFormatArg>& Args)
 {
-	UNetUtils::NetLogWarn(this, Format, Args, UDemoUtilLib::GetDefaultLogFlags());
+	UNetUtils::NetPrefixedLogWarn(this, Sender, Format, Args, UDemoUtilLib::GetDefaultLogFlags());
 }
 // ~Logging End

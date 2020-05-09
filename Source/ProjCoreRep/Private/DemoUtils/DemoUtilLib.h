@@ -6,6 +6,8 @@
 #include "DemoUtilTypes.h"
 
 #include "UObject/TextProperty.h"
+#include "Engine/EngineTypes.h"
+#include "TimerManager.h"
 
 #include "DemoUtilLib.generated.h"
 
@@ -21,6 +23,15 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Demo|Utils")
 	static bool ShouldDoRepTestByFlags(const AActor* TestOwner, ERepTestFlags InFlags);
+	
+	static void SetupTestTimerIfNecessary
+	(
+		AActor* TestOwner,
+		FTimerHandle& OutTimerHandle,
+		EMyFrameworkPoint const InCallingPoint,
+		const FRepTimerTest& InTestProps,
+		const FTimerDelegate& InTimerDelegate
+	);
 	// ~Actor Test End
 
 	// ~Logging Test Enum Begin
