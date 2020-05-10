@@ -3,6 +3,11 @@
 #include "Util\Net\NetUtils.h"
 #include "DemoUtils\DemoUtilLib.h"
 
+/**
+* Replication test: 
+* Activate state replication.
+*/
+
 UComp::UComp()
 {
 	UNetUtils::LogComponentNetVars(this);
@@ -12,4 +17,13 @@ void UComp::BeginPlay()
 {
 	M_LOGFUNC();
 	Super::BeginPlay();
+}
+
+void UComp::PrintMe_Implementation()
+{
+}
+
+void UComp::UpdateProps_Implementation()
+{
+	
 }

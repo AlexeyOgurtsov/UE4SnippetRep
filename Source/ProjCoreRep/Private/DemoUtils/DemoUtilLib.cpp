@@ -115,6 +115,17 @@ void UDemoUtilLib::UpdateStringSet(TSet<FString>& StringSet)
 	}
 }
 
+void UDemoUtilLib::UpdateStringToStringMap(TMap<FString, FString>& StringToStringMap)
+{
+	const TMap<FString, FString> OldMap = StringToStringMap;
+
+	StringToStringMap.Empty();
+	for (const TPair<FString, FString>& Pair : OldMap)
+	{
+		StringToStringMap.Add(GetUpdatedString(Pair.Key), GetUpdatedString(Pair.Value));
+	}
+}
+
 void UDemoUtilLib::UpdateStringToIntMap(TMap<FString,int32>& StringToIntMap)
 {
 	const TMap<FString, int32> OldMap = StringToIntMap;

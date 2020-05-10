@@ -60,7 +60,7 @@ void ARepActor::DoOnTimerTestIfNecessary()
 	ThisLog
 	(
 	 	TEXT(__FUNCTION__), 
-		TEXT("Timer test: time=%f; time_since_creation=%f"), 
+		TEXT("Timer test: time={0}; time_since_creation={1}"), 
 		{
 	       		GetWorld()->GetTimeSeconds(), 
 			GetGameTimeSinceCreation() 

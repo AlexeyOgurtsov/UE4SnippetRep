@@ -3,6 +3,8 @@
 #include "Base/RepActor.h"
 #include "RepActor_PropTest.generated.h"
 
+class URepComp_PropTest;
+class URepObj_PropTest;
 
 USTRUCT(BlueprintType)
 struct FTestStructToReplicate
@@ -12,8 +14,14 @@ struct FTestStructToReplicate
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Replication")
 	FString MyStructName = TEXT("Unnamed");
 
+	// ERROR: Error: Struct members cannot be replicated!
+	//UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Replication")
+	//FString RepString = TEXT("Uninitialized");
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Replication")
-	FString RepString = TEXT("Uninitialized");
+	FString NoRepString = TEXT("Uninitialized");
+
+	FString StringField = TEXT("Uninitialized");
 
 	void TestUpdate();
 
@@ -89,6 +97,9 @@ public:
 	TSet<FString> RepStrSet;
 
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
+	TMap<FString, FString> RepStrStrMap;
+
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
 	TMap<FString, int32> RepStrIntMap;
 	// ~Replication props End
 
@@ -99,6 +110,23 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Replication|Demo|Test", Meta = (AllowPrivateAccess = true))
 	FTestStructToReplicate TestStruct;
 	// ~Struct End
+
+	// ~Components Begin
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Replication|Demo|Test|Component")
+	URepComp_PropTest* Comp = nullptr;
+
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Replication|Demo|Test|Component")
+	URepComp_PropTest* RepComp = nullptr;
+	void InitializeComps();
+	// ~Components End
+
+	// ~Objects Begin
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Replication|Demo|Test|Component")
+	URepObj_PropTest* Obj = nullptr;
+
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Replication|Demo|Test|Component")
+	URepObj_PropTest* RepObj = nullptr;
+	// ~Objects End
 
 protected:
 	void UpdateObserve_IfShould(const FRepTestFlags_UpdateObserve& UpdateObserve);

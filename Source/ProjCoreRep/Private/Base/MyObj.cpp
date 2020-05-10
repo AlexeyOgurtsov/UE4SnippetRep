@@ -7,3 +7,11 @@
 UMyObj::UMyObj()
 {
 }
+
+void UMyObj::PrintMe_Implementation()
+{
+}
+
+void UMyObj::UpdateProps_Implementation()
+{
+}

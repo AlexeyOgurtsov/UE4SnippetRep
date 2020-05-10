@@ -55,6 +55,9 @@ public:
 	static void UpdateStringSet(TSet<FString>& StringSet);
 
 	UFUNCTION(BlueprintCallable, Category = "Demo|Utils")
+	static void UpdateStringToStringMap(TMap<FString, FString>& StringToStringMap);
+
+	UFUNCTION(BlueprintCallable, Category = "Demo|Utils")
 	static void UpdateStringToIntMap(TMap<FString,int32>& StringToIntMap);
 
 	UFUNCTION(BlueprintCallable, Category = "Demo|Utils")

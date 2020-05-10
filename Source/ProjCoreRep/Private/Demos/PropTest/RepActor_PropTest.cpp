@@ -1,6 +1,9 @@
 #pragma once
 
 #include "RepActor_PropTest.h"
+#include "RepComp_PropTest.h"
+#include "RepObj_PropTest.h"
+
 #include "Util\Core\LogUtilLib.h"
 #include "DemoUtils\DemoUtilLib.h"
 
@@ -25,8 +28,29 @@
 
 ARepActor_PropTest::ARepActor_PropTest()
 {
-	RepTestStruct.MyStructName = TEXT("RepTestStruct");
-	TestStruct.MyStructName = TEXT("TestStruct");
+	{
+		RepStrArray.Add(FString(TEXT("A")));
+		RepStrSet.Append(RepStrArray);
+	}
+
+	{
+		RepStrStrMap.Add(FString("AKey"), FString("AValue"));
+		RepStrIntMap.Add(FString("AKey"), 3);
+	}
+	{
+		RepTestStruct.MyStructName = TEXT("RepTestStruct");
+		TestStruct.MyStructName = TEXT("TestStruct");
+	}
+	InitializeComps();
+}
+
+void ARepActor_PropTest::InitializeComps()
+{
+	M_LOGFUNC();
+	ThisLog(TEXT(__FUNCTION__), TEXT(""), {});
+
+	Comp = CreateDefaultSubobject<URepComp_PropTest>(TEXT("Comp"));
+	RepComp = CreateDefaultSubobject<URepComp_PropTest>(TEXT("RepComp"));
 }
 
 void ARepActor_PropTest::DemoUpdateProps_UsingCPPAssign()
@@ -46,9 +70,11 @@ void ARepActor_PropTest::DemoUpdateProps_UsingCPPAssign()
 	RepText = FText::Format(FText::FromString("{0}{1}"), RepText, DemoUtils::MY_UPDATED_TEXT_POSTFIX);
 	UDemoUtilLib::UpdateStringArray(RepStrArray);
 	UDemoUtilLib::UpdateStringSet(RepStrSet);
-	UDemoUtilLib::UpdateStringToIntMap(RepStrIntMap);
+	UDemoUtilLib::UpdateStringToStringMap(RepStrStrMap);
+	UDemoUtilLib::UpdateStringToIntMap(RepStrIntMap);	
 
 	{
+		
 		// Enums
 		RepEnum = UDemoUtilLib::GetUpdatedEnum(this);
 		//RepEnumField = UDemoUtilLib::GetUpdatedEnum(this);
@@ -58,6 +84,17 @@ void ARepActor_PropTest::DemoUpdateProps_UsingCPPAssign()
 		// Structs
 		RepTestStruct.TestUpdate();
 		TestStruct.TestUpdate();
+	}
+
+	{
+		// Components
+		Comp->UpdateProps();
+		RepComp->UpdateProps();
+	}
+
+	{
+		Obj->UpdateProps();
+		RepObj->UpdateProps();
 	}
 }
 
@@ -89,6 +126,7 @@ void ARepActor_PropTest::PrintMe_Implementation()
 	{
 		ULogUtilLib::K2LogStringArray(RepStrArray);
 		ULogUtilLib::K2LogStringSet(RepStrSet);
+		ULogUtilLib::K2LogStringMap(RepStrStrMap);
 		// @TODO
 		//ULogUtilLib::LogMap(RepStrIntMap, StringDeref, IntToStringDeref);
 	}
@@ -98,7 +136,17 @@ void ARepActor_PropTest::PrintMe_Implementation()
 		TestStruct.Print(this);
 	}
 
-	// @TODO: Log new objects etc.
+	{
+		// Components
+		Comp->PrintMe();
+		RepComp->PrintMe();
+	}
+
+	{
+		// Objects
+		Obj->PrintMe();
+		RepObj->PrintMe();
+	}
 }
 
 void ARepActor_PropTest::TimerTest_Implementation()
@@ -149,6 +197,7 @@ void ARepActor_PropTest::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 		DOREPLIFETIME(ARepActor_PropTest, RepText);
 		DOREPLIFETIME(ARepActor_PropTest, RepStrArray);
 		DOREPLIFETIME(ARepActor_PropTest, RepStrSet);
+		DOREPLIFETIME(ARepActor_PropTest, RepStrStrMap);
 		DOREPLIFETIME(ARepActor_PropTest, RepStrIntMap);
 	}
 
@@ -157,16 +206,30 @@ void ARepActor_PropTest::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 		DOREPLIFETIME(ARepActor_PropTest, RepEnum);
 		//DOREPLIFETIME(ARepActor_PropTest, RepEnumField);
 	}
+
+	{
+		DOREPLIFETIME(ARepActor_PropTest, RepTestStruct);
+	}
+
+	{
+		DOREPLIFETIME(ARepActor_PropTest, RepComp);
+	}
+
+	{
+		DOREPLIFETIME(ARepActor_PropTest, RepObj);
+	}
 }
 
 void FTestStructToReplicate::TestUpdate()
 {
-	RepString.Append(DemoUtils::MY_UPDATED_STRING_POSTFIX);
+	NoRepString.Append(DemoUtils::MY_UPDATED_STRING_POSTFIX);
+	StringField.Append(DemoUtils::MY_UPDATED_STRING_POSTFIX);
 }
 
 void FTestStructToReplicate::Print(ARepActor* const Owner)
 {
 	M_LOGFUNC();
 	ULogUtilLib::LogString(TEXT("MyStructName"), MyStructName);
-	ULogUtilLib::LogString(TEXT("RepString"), RepString);
+	ULogUtilLib::LogString(TEXT("NoRepString"), NoRepString);
+	ULogUtilLib::LogString(TEXT("StringField"), StringField);
 }

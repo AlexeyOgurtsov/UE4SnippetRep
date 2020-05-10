@@ -9,4 +9,13 @@ class UMyObj : public UObject
 
 public:
 	UMyObj();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Replication|Demo|Test")
+	void PrintMe() const;
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Replication|Demo|Test")
+	void UpdateProps();
+
+	virtual void PrintMe_Implementation();
+	virtual void UpdateProps_Implementation();
 };

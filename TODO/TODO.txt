@@ -2,6 +2,7 @@ Tests:
 1. Replication function calls
 2. Property update
 3. Actor flags for replication
+4. Events/Delegates/Interface calls
 
 Engine subsystems replication:
 1. Physics
