@@ -42,6 +42,9 @@ ARepActor_PropTest::ARepActor_PropTest()
 		TestStruct.MyStructName = TEXT("TestStruct");
 	}
 	InitializeComps();
+
+	Obj = CreateDefaultSubobject<URepObj_PropTest>(TEXT("Obj"));
+	RepObj = CreateDefaultSubobject<URepObj_PropTest>(TEXT("RepObj"));
 }
 
 void ARepActor_PropTest::InitializeComps()
