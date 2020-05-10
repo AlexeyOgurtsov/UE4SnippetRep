@@ -21,11 +21,13 @@ bool UDemoUtilLib::ShouldDoRepTestByFlags(const AActor* TestOwner, ERepTestFlags
 	{
 		return (InFlags & ERepTestFlags::DoOnServer) != ERepTestFlags::None;
 	}
-	else
-	{
-		checkf( ! TestOwner->HasAuthority(), TEXT("This code must be executed inside the branch where there's no authority") );
+
+	if ( ! TestOwner->HasAuthority() || TestOwner->GetNetMode() == NM_Standalone)
+	{	
 		return (InFlags & ERepTestFlags::DoOnClient) != ERepTestFlags::None;
 	}
+
+	return false;
 }
 
 void UDemoUtilLib::SetupTestTimerIfNecessary
@@ -102,6 +104,7 @@ void UDemoUtilLib::UpdateStringArray(TArray<FString>& StringArray)
 	{
 		UpdateString(S);
 	}
+	StringArray.Add(GetUpdatedString(FString(TEXT("NEW"))));
 }
 	
 void UDemoUtilLib::UpdateStringSet(TSet<FString>& StringSet)

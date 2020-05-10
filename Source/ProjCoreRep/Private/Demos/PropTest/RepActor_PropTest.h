@@ -93,14 +93,16 @@ public:
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
 	TArray<FString> RepStrArray;
 
-	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
-	TSet<FString> RepStrSet;
+	// WARNING!!! Replicated TSet (s) are NOT supporter: UE 4.24
+	//UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
+	//TSet<FString> RepStrSet;
 
-	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
-	TMap<FString, FString> RepStrStrMap;
+	// WARNING!!! Replicated TMap (s) are NOT supporter: UE 4.24
+	//UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
+	//TMap<FString, FString> RepStrStrMap;
 
-	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
-	TMap<FString, int32> RepStrIntMap;
+	//UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite, Meta = (AllowPrivateAccess = true))
+	//TMap<FString, int32> RepStrIntMap;
 	// ~Replication props End
 
 	// ~Struct Begin

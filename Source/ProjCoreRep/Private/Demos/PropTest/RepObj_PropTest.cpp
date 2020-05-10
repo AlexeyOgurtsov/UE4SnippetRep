@@ -10,8 +10,8 @@ void URepObj_PropTest::PrintMe_Implementation()
 {
 	M_LOGFUNC();
 	M_LOG( TEXT("Object: %s"), *ULogUtilLib::GetNameAndClassSafe(this) );
-	M_LOG( TEXT("%s= \"%s\""), *GET_MEMBER_NAME_STRING_CHECKED(URepObj_PropTest, RepString), *RepString );
-	M_LOG( TEXT("%s= \"%s\""), *GET_MEMBER_NAME_STRING_CHECKED(URepObj_PropTest, StringField), TEXT("{0}"), *StringField );
+	M_LOG( TEXT("%s= \"%s\""), GET_MEMBER_NAME_STRING_CHECKED(URepObj_PropTest, RepString), *RepString );
+	M_LOG( TEXT("%s= \"%s\""), GET_MEMBER_NAME_STRING_CHECKED(URepObj_PropTest, StringField), *StringField );
 }
 
 void URepObj_PropTest::UpdateProps_Implementation()

@@ -10,6 +10,8 @@
 
 UComp::UComp()
 {
+	SetIsReplicatedByDefault(true); // WARNING!!! Components are NOT replicated by default!!!
+
 	UNetUtils::LogComponentNetVars(this);
 }
 

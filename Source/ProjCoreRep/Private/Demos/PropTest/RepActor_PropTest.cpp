@@ -30,12 +30,12 @@ ARepActor_PropTest::ARepActor_PropTest()
 {
 	{
 		RepStrArray.Add(FString(TEXT("A")));
-		RepStrSet.Append(RepStrArray);
+		//RepStrSet.Append(RepStrArray);
 	}
 
 	{
-		RepStrStrMap.Add(FString("AKey"), FString("AValue"));
-		RepStrIntMap.Add(FString("AKey"), 3);
+		//RepStrStrMap.Add(FString("AKey"), FString("AValue"));
+		//RepStrIntMap.Add(FString("AKey"), 3);
 	}
 	{
 		RepTestStruct.MyStructName = TEXT("RepTestStruct");
@@ -72,9 +72,9 @@ void ARepActor_PropTest::DemoUpdateProps_UsingCPPAssign()
 	RepStr.Append(DemoUtils::MY_UPDATED_STRING_POSTFIX);
 	RepText = FText::Format(FText::FromString("{0}{1}"), RepText, DemoUtils::MY_UPDATED_TEXT_POSTFIX);
 	UDemoUtilLib::UpdateStringArray(RepStrArray);
-	UDemoUtilLib::UpdateStringSet(RepStrSet);
-	UDemoUtilLib::UpdateStringToStringMap(RepStrStrMap);
-	UDemoUtilLib::UpdateStringToIntMap(RepStrIntMap);	
+	//UDemoUtilLib::UpdateStringSet(RepStrSet);
+	//UDemoUtilLib::UpdateStringToStringMap(RepStrStrMap);
+	//UDemoUtilLib::UpdateStringToIntMap(RepStrIntMap);	
 
 	{
 		
@@ -128,8 +128,8 @@ void ARepActor_PropTest::PrintMe_Implementation()
 
 	{
 		ULogUtilLib::K2LogStringArray(RepStrArray);
-		ULogUtilLib::K2LogStringSet(RepStrSet);
-		ULogUtilLib::K2LogStringMap(RepStrStrMap);
+		//ULogUtilLib::K2LogStringSet(RepStrSet);
+		//ULogUtilLib::K2LogStringMap(RepStrStrMap);
 		// @TODO
 		//ULogUtilLib::LogMap(RepStrIntMap, StringDeref, IntToStringDeref);
 	}
@@ -199,9 +199,11 @@ void ARepActor_PropTest::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 		DOREPLIFETIME(ARepActor_PropTest, RepStr);
 		DOREPLIFETIME(ARepActor_PropTest, RepText);
 		DOREPLIFETIME(ARepActor_PropTest, RepStrArray);
-		DOREPLIFETIME(ARepActor_PropTest, RepStrSet);
-		DOREPLIFETIME(ARepActor_PropTest, RepStrStrMap);
-		DOREPLIFETIME(ARepActor_PropTest, RepStrIntMap);
+
+	// WARNING!!! Replicated TSet and TMap are *NOT* supported in UE 4.24
+	//	DOREPLIFETIME(ARepActor_PropTest, RepStrSet);
+	//	DOREPLIFETIME(ARepActor_PropTest, RepStrStrMap);
+	//	DOREPLIFETIME(ARepActor_PropTest, RepStrIntMap);
 	}
 
 	{

@@ -14,6 +14,7 @@ void URepComp_PropTest::BeginPlay()
 void URepComp_PropTest::PrintMe_Implementation()
 {
 	M_LOGFUNC();
+	M_LOG( TEXT("Object: %s"), *ULogUtilLib::GetNameAndClassSafe(this) );
 	UNetUtils::NetPrefixedLog(this, GET_MEMBER_NAME_STRING_CHECKED(URepComp_PropTest, RepString), TEXT("{0}"), { RepString });
 	UNetUtils::NetPrefixedLog(this, GET_MEMBER_NAME_STRING_CHECKED(URepComp_PropTest, StringField), TEXT("{0}"), { StringField });
 }

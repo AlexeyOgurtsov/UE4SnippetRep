@@ -16,6 +16,7 @@ DECLARE_LOG_CATEGORY_EXTERN(RepActLog, Display, All);
 ARepActor::ARepActor()
 {
 	bReplicates = true;
+
 	InitMesh();
 	RootComponent = SMComponent;
 
