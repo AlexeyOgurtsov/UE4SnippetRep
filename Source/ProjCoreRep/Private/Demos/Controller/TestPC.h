@@ -21,13 +21,40 @@ public:
 	* - Can be CALLED both from CLIENT and SERVER;
 	*/
 	UFUNCTION(Reliable, Server, Category = "RPC|Demo|Replication")
-	void ServerTest();
+	void ServerTest(const FString& InSender);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPC|Demo|Replication")
+	FRepActorTest TestNetFuncCallProps_Server_BeginPlay;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPC|Demo|Replication")
+	FRepActorTest TestNetFuncCallProps_Server_Timer;
 
 	UFUNCTION(Reliable, Client, Category = "RPC|Demo|Replication")
-	void ClientTest();
+	void ClientTest(const FString& InSender);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPC|Demo|Replication")
+	FRepActorTest TestNetFuncCallProps_Client_BeginPlay;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPC|Demo|Replication")
+	FRepActorTest TestNetFuncCallProps_Client_Timer;
+
 
 	UFUNCTION(Reliable, NetMulticast, Category = "RPC|Demo|Replication")
-	void MulticastTest();
+	void MulticastTest(const FString& InSender);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPC|Demo|Replication")
+	FRepActorTest TestNetFuncCallProps_NetMulticast_BeginPlay;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPC|Demo|Replication")
+		FRepActorTest TestNetFuncCallProps_NetMulticast_Timer;
+
+	void DoTestNetFuncCalls
+	(
+		const FRepActorTest& InServerTest,
+		const FRepActorTest& InClientTest,
+		const FRepActorTest& InNetMulticastTest,
+		const TCHAR* InSender, EMyFrameworkPoint FrameworkPoint
+	);
 	// ~Test RPC calls End
 
 	// ~Timer Begin

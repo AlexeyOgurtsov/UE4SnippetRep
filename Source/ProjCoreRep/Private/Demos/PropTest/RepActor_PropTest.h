@@ -123,15 +123,24 @@ public:
 	// ~Components End
 
 	// ~Objects Begin
+	// WARNING!!! Without it there will be NO replication!!!
+	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Replication|Demo|Test|Component")
 	URepObj_PropTest* Obj = nullptr;
 
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Replication|Demo|Test|Component")
 	URepObj_PropTest* RepObj = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Replication|Demo|Test|Component")
+	bool bReplicateTestObjects = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Replication|Demo|Test|Component")
+	bool UseKeyNeedsToReplicate_ToOptimizeReplication = true;
 	// ~Objects End
 
 protected:
-	void UpdateObserve_IfShould(const FRepTestFlags_UpdateObserve& UpdateObserve);
+	void UpdateObserve_IfShould(const TCHAR* InReason, const FRepTestFlags_UpdateObserve& UpdateObserve);
 	
 	virtual void BeginPlayTest_Implementation() override;
 

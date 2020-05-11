@@ -1,6 +1,6 @@
 #include "TestPC.h"
 #include "TestPawn.h"
-#include "DemoUtils/DemoUtilTypes.h"
+#include "DemoUtils/DemoUtilLib.h"
 #include "Util/Core/LogUtilLib.h"
 
 /**
@@ -16,22 +16,22 @@ ATestPC::ATestPC()
 {
 }
 
-void ATestPC::ServerTest_Implementation()
+void ATestPC::ServerTest_Implementation(const FString& InSender)
 {
 	M_LOGFUNC();
-	ThisLog(TEXT(__FUNCTION__), TEXT(""), {});
+	ThisLog(TEXT(__FUNCTION__), TEXT("Sender={0}"), { InSender });
 }
 
-void ATestPC::ClientTest_Implementation()
+void ATestPC::ClientTest_Implementation(const FString& InSender)
 {
 	M_LOGFUNC();
-	ThisLog(TEXT(__FUNCTION__), TEXT(""), {});
+	ThisLog(TEXT(__FUNCTION__), TEXT("Sender={0}"), { InSender });
 }
 
-void ATestPC::MulticastTest_Implementation()
+void ATestPC::MulticastTest_Implementation(const FString& InSender)
 {
 	M_LOGFUNC();
-	ThisLog(TEXT(__FUNCTION__), TEXT(""), {});
+	ThisLog(TEXT(__FUNCTION__), TEXT("Sender={0}"), { InSender });
 }
 
 void ATestPC::PostInitProperties()
@@ -42,44 +42,64 @@ void ATestPC::PostInitProperties()
 void ATestPC::BeginPlay()
 {
 	Super::BeginPlay();	
+	
+	DoTestNetFuncCalls
+	(
+		TestNetFuncCallProps_Server_BeginPlay,
+		TestNetFuncCallProps_Client_BeginPlay,
+		TestNetFuncCallProps_NetMulticast_BeginPlay,
+		TEXT("BeginPlay"), 
+		EMyFrameworkPoint::AtBeginPlay
+	);	
+}
 
+void ATestPC::DoTestNetFuncCalls
+(
+	const FRepActorTest& InServerTest,
+	const FRepActorTest& InClientTest,
+	const FRepActorTest& InNetMulticastTest,
+	const TCHAR* const InSender, const EMyFrameworkPoint FrameworkPoint
+)
+{
+	if (UDemoUtilLib::ShouldDoRepTest(this, InServerTest))
 	{
-		if (HasAuthority())
-		{
-			// Testing that we can perform Server calls from Server itself!
-			ServerTest();
+		ThisLog(TEXT(__FUNCTION__), TEXT("From \"{0}\" CALLING \"{1}\""), { InSender, TEXT("ServerTest") });
+		// Testing that we can perform Server calls from Server itself!
+		ServerTest(InSender);
+	}
 
-			// Testing that we can perform Client calls from Server!
-			//ClientTest();
+	if (UDemoUtilLib::ShouldDoRepTest(this, InClientTest))
+	{
+		ThisLog(TEXT(__FUNCTION__), TEXT("From \"{0}\" CALLING \"{1}\""), { InSender, TEXT("ServerTest") });
+		// Testing that we can perform Client calls from Server!
+		ClientTest(InSender);
+	}
 
-			// Testing that we can perform NetMulticast calls from Server!
-			//MulticastTest();
-		}
+	if (UDemoUtilLib::ShouldDoRepTest(this, InNetMulticastTest))
+	{
+		ThisLog(TEXT(__FUNCTION__), TEXT("From \"{0}\" CALLING \"{1}\""), { InSender, TEXT("ServerTest") });
+		// Testing that we can perform NetMulticast calls from Server!
+		MulticastTest(InSender);
 	}
 }
 
 void ATestPC::DoOnTimerTestIfNecessary_Implementation()
 {
 	M_LOGFUNC();	
-	ThisLog(TEXT(__FUNCTION__), TEXT(""), {});
-	// @TODO
+
+	DoTestNetFuncCalls
+	(
+		TestNetFuncCallProps_Server_Timer,
+		TestNetFuncCallProps_Client_Timer,
+		TestNetFuncCallProps_NetMulticast_Timer,
+		TEXT("Timer"),
+		EMyFrameworkPoint::Custom
+	);
 }
 
 void ATestPC::OnPawnBeginPlay_Implementation()
 {
 	Super::OnPawnBeginPlay_Implementation();
-
-	if (HasAuthority())
-	{
-		// Testing that we can perform Server calls from Server itself!
-		ServerTest();
-
-		// Testing that we can perform Client calls from Server!
-		ClientTest();
-
-		// Testing that we can perform NetMulticast calls from Server!
-		MulticastTest();
-	}
 }
 // ~AActor end
 
@@ -104,7 +124,7 @@ void ATestPC::SetPawn(APawn* const InPawn)
 void ATestPC::DebugOne_Implementation()
 {
 	ThisLog(TEXT(__FUNCTION__), TEXT(""), {});
-	ServerTest();
+	ServerTest(TEXT("DebugOne"));
 }
 
 void ATestPC::DebugTwo_Implementation()

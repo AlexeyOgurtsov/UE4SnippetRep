@@ -28,6 +28,19 @@ void AMyPawn::BeginPlay()
 		PC->OnPawnBeginPlay();
 	}
 }
+
+void AMyPawn::PossessedBy(AController* const NewController)
+{
+	Super::PossessedBy(NewController);
+	ThisLog
+	(
+		TEXT(__FUNCTION__),
+		TEXT("NewController=\"{0}\""),
+		{
+			ULogUtilLib::GetNameAndClassSafe(NewController)
+		}
+	);
+}
 // ~AActor end
 
 // ~Controller Begin

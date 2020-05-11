@@ -19,6 +19,8 @@ public:
 	// ~Actor Begin
 	virtual void PostInitProperties() override;
 	virtual void BeginPlay() override;
+
+	virtual void PossessedBy(AController* NewController) override;
 	// ~Actor End
 
 	// ~Controller Begin

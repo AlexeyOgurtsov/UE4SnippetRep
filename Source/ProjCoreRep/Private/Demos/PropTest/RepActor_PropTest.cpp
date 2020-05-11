@@ -7,6 +7,8 @@
 #include "Util\Core\LogUtilLib.h"
 #include "DemoUtils\DemoUtilLib.h"
 
+#include "Engine/EngineTypes.h"
+#include "Engine/ActorChannel.h"
 #include "Net/UnrealNetwork.h"
 
 /**
@@ -58,7 +60,6 @@ void ARepActor_PropTest::InitializeComps()
 
 void ARepActor_PropTest::DemoUpdateProps_UsingCPPAssign()
 {
-	M_LOGFUNC();
 	ThisLog(TEXT(__FUNCTION__), TEXT(""), {});
 
 
@@ -105,7 +106,7 @@ void ARepActor_PropTest::BeginPlayTest_Implementation()
 {
 	M_LOGFUNC();
 	Super::BeginPlayTest_Implementation();
-	UpdateObserve_IfShould(OnBeginPlay_UpdateObserve);
+	UpdateObserve_IfShould(TEXT("BeginPlay"), OnBeginPlay_UpdateObserve);
 }
 
 void ARepActor_PropTest::PrintMe_Implementation()
@@ -155,19 +156,96 @@ void ARepActor_PropTest::PrintMe_Implementation()
 void ARepActor_PropTest::TimerTest_Implementation()
 {
 	Super::TimerTest_Implementation();
-	UpdateObserve_IfShould(OnTimer_UpdateObserve);
+	UpdateObserve_IfShould(TEXT("TimerTest"), OnTimer_UpdateObserve);
 }
 
-void ARepActor_PropTest::UpdateObserve_IfShould(const FRepTestFlags_UpdateObserve& UpdateObserve)
-{
+void ARepActor_PropTest::UpdateObserve_IfShould(const TCHAR* InReason, const FRepTestFlags_UpdateObserve& UpdateObserve)
+{	
+	ThisLog(TEXT("UpdateObserve"), TEXT("{0}"), { InReason });
 	if( UDemoUtilLib::ShouldDoRepTestByFlags(this, UpdateObserve.UpdateFlags) )
 	{
+		ThisLog(TEXT("<<<UPDATE>>>"), TEXT("{0}"), { InReason });
 		DemoUpdateProps_UsingCPPAssign();
 	}
 
 	if( UDemoUtilLib::ShouldDoRepTestByFlags(this, UpdateObserve.ObserveFlags) )
 	{
+		ThisLog(TEXT("<<<OBSERVE>>>"), TEXT("{0}"), { InReason });
 		PrintMe();
+	}
+}
+
+bool ARepActor_PropTest::ReplicateSubobjects(UActorChannel* const Channel, FOutBunch* const Bunch, FReplicationFlags* const RepFlags)
+{	
+	Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
+
+	const bool bLogOnlyIfUpdated = true;
+
+	if (bReplicateTestObjects)
+	{		
+		if (Channel == nullptr)
+		{
+			ThisLogWarn(TEXT(__FUNCTION__), TEXT("Object: {0}; channel is nullptr!"), { *ULogUtilLib::GetNameAndClassSafe(this) });
+			return false;
+		}
+
+		bool bShouldReplicate_Obj = false; 
+		bool bShouldReplicate_RepObj = false;
+		bool bShouldReplicate_Obj_SecondTime = false;
+		bool bShouldReplicate_RepObj_SecondTime = false;
+		const int32 ObjKeyId = 0;
+		const int32 RepObjKeyId = 1;
+		
+		if (UseKeyNeedsToReplicate_ToOptimizeReplication)
+		{
+			const int32 ObjRepKey = Obj->GetRepKey();
+			bShouldReplicate_Obj = Channel->KeyNeedsToReplicate(ObjKeyId, ObjRepKey);
+			bShouldReplicate_Obj_SecondTime = Channel->KeyNeedsToReplicate(ObjKeyId, ObjRepKey);
+
+			const int32 RepObjRepKey = RepObj->GetRepKey();
+			bShouldReplicate_RepObj = Channel->KeyNeedsToReplicate(RepObjKeyId, RepObjRepKey);
+			bShouldReplicate_RepObj_SecondTime = Channel->KeyNeedsToReplicate(RepObjKeyId, RepObjRepKey);
+		}
+		else
+		{
+			bShouldReplicate_Obj = true;
+			bShouldReplicate_RepObj = true;
+		}
+
+		bool bObjReplicated = false; 
+		if (bShouldReplicate_Obj)
+		{
+			bShouldReplicate_Obj = Channel->ReplicateSubobject(Obj, *Bunch, *RepFlags);
+		
+		}
+
+		bool bRepObjReplicated = false;		
+		if (bShouldReplicate_RepObj)
+		{		
+			bRepObjReplicated = Channel->ReplicateSubobject(RepObj, *Bunch, *RepFlags);			
+		}
+
+		bool const bReplicatedSubobjects = bObjReplicated | bRepObjReplicated;
+		bool const bShouldTryReplicate = bShouldReplicate_Obj || bShouldReplicate_RepObj;
+		if (! bLogOnlyIfUpdated || bReplicatedSubobjects || bShouldTryReplicate)
+		{
+			ThisLog(TEXT(__FUNCTION__), TEXT("Object: {0};"), { *ULogUtilLib::GetNameAndClassSafe(this) });
+
+			ULogUtilLib::LogYesNo(FString::Printf(TEXT("KeyNeedsToReplicate for object \"%s\""), *Obj->GetName()), bShouldReplicate_Obj);
+			ULogUtilLib::LogYesNo(FString::Printf(TEXT("KeyNeedsToReplicate for object \"%s\""), *RepObj->GetName()), bShouldReplicate_RepObj);
+
+			ULogUtilLib::LogYesNo(FString::Printf(TEXT("KeyNeedsToReplicate SECOND TIME for object \"%s\""), *Obj->GetName()), bShouldReplicate_Obj_SecondTime);
+			ULogUtilLib::LogYesNo(FString::Printf(TEXT("KeyNeedsToReplicate SECOND TIME for object \"%s\""), *RepObj->GetName()), bShouldReplicate_RepObj_SecondTime);
+
+			ULogUtilLib::LogYesNoC(TEXT("bObjReplicated"), bObjReplicated);
+			ULogUtilLib::LogYesNoC(TEXT("bRepObjReplicated"), bRepObjReplicated);
+		}
+
+		return bReplicatedSubobjects;
+	}
+	else
+	{
+		return false;
 	}
 }
 

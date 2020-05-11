@@ -60,6 +60,9 @@ enum class EMyFrameworkPoint : uint8
 
 	/** BeginPlay*/
 	, AtBeginPlay = 3 UMETA(DisplayName="At BeginPlay")
+
+	/** BeginPlay*/
+	, Custom = 4 UMETA(DisplayName = "Custom")
 };
 
 namespace DemoUtils

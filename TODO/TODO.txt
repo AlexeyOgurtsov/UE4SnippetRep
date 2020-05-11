@@ -1,3 +1,12 @@
+UObject:
+	Passing UObject addresses in Networking environment
+
+Tear Off
+
+Relevancy:
+	https://forums.unrealengine.com/development-discussion/c-gameplay-programming/1501818-need-some-clarification-on-netmulticast-events-and-actor-relevancy
+	Q. Are reliable RPCs called to all irrespective of net relevancy?
+
 Tests:
 1. Replication function calls
 2. Property update

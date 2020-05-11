@@ -10,6 +10,9 @@ class UMyObj : public UObject
 public:
 	UMyObj();
 
+	// WARNING!!! We must override it to return TRUE to support replication!!!
+	virtual bool IsSupportedForNetworking() const override { return bMySupportedForNetworking; }
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Replication|Demo|Test")
 	void PrintMe() const;
 
@@ -18,4 +21,7 @@ public:
 
 	virtual void PrintMe_Implementation();
 	virtual void UpdateProps_Implementation();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Replication|Demo|Test")
+	bool bMySupportedForNetworking = true;
 };

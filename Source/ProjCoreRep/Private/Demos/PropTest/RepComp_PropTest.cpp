@@ -2,6 +2,8 @@
 #include "Util/Core/LogUtilLib.h"
 #include "DemoUtils/DemoUtilLib.h"
 
+#include "Net/UnrealNetwork.h"
+
 URepComp_PropTest::URepComp_PropTest()
 {
 }
@@ -29,5 +31,5 @@ void URepComp_PropTest::UpdateProps_Implementation()
 void URepComp_PropTest::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	// @TODO
+	DOREPLIFETIME(URepComp_PropTest, RepString);
 }

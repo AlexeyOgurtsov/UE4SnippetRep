@@ -17,14 +17,16 @@ bool UDemoUtilLib::ShouldDoRepTestByFlags(const AActor* TestOwner, ERepTestFlags
 		return false;
 	}
 
-	if(TestOwner->HasAuthority())
+	if(TestOwner->HasAuthority() 
+		&& ((InFlags & ERepTestFlags::DoOnServer) != ERepTestFlags::None))
 	{
-		return (InFlags & ERepTestFlags::DoOnServer) != ERepTestFlags::None;
+		return true;
 	}
 
-	if ( ! TestOwner->HasAuthority() || TestOwner->GetNetMode() == NM_Standalone)
+	if ( ( ! TestOwner->HasAuthority() || TestOwner->GetNetMode() == NM_Standalone)
+		&& ((InFlags & ERepTestFlags::DoOnClient) != ERepTestFlags::None))
 	{	
-		return (InFlags & ERepTestFlags::DoOnClient) != ERepTestFlags::None;
+		return true;
 	}
 
 	return false;

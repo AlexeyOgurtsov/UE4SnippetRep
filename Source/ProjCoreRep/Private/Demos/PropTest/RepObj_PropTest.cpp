@@ -2,8 +2,16 @@
 #include "Util/Core/LogUtilLib.h"
 #include "DemoUtils/DemoUtilLib.h"
 
+#include "Net/UnrealNetwork.h"
+
 URepObj_PropTest::URepObj_PropTest()
 {
+}
+
+// Replicate key needs to be changed each time object needs to be replicated
+int32 URepObj_PropTest::GetRepKey() const
+{
+	return RepKey;
 }
 
 void URepObj_PropTest::PrintMe_Implementation() 
@@ -19,11 +27,12 @@ void URepObj_PropTest::UpdateProps_Implementation()
 	M_LOGFUNC();
 	RepString = UDemoUtilLib::GetUpdatedString(RepString);
 	StringField = UDemoUtilLib::GetUpdatedString(StringField);
+	RepKey++;
 }
+
 
 void URepObj_PropTest::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	// Q. How to use DOREPLIFETIME inside UObject?
-	//DOREPLIFETIME(URepObj_PropTest, RepString);
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);	
+	DOREPLIFETIME(URepObj_PropTest, RepString);
 }
