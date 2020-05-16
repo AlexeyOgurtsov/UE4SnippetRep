@@ -10,5 +10,8 @@ public class ProjCoreRepEditorTarget : TargetRules
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.Latest;
 		ExtraModuleNames.AddRange( new string[] { "ProjCoreRep" } );
+
+		bUseUnityBuild = false;
+		bUsePCHFiles = false;
 	}
 }

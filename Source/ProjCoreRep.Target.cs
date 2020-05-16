@@ -10,5 +10,8 @@ public class ProjCoreRepTarget : TargetRules
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.Latest;
 		ExtraModuleNames.AddRange( new string[] { "ProjCoreRep" } );
+
+		bUseUnityBuild = false;
+		bUsePCHFiles = false;
 	}
 }
